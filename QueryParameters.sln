@@ -5,9 +5,11 @@ VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{425506B9-0327-4CF4-922B-19C9DC71C411}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLH.QueryParameters", "src\RLH.QueryParameters\RLH.QueryParameters.csproj", "{EC5D51F5-CA1D-433C-B803-790081C88823}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RLH.QueryParameters", "src\RLH.QueryParameters\RLH.QueryParameters.csproj", "{EC5D51F5-CA1D-433C-B803-790081C88823}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLH.QueryParameters.ASPNETCore", "src\RLH.QueryParameters.ASPNETCore\RLH.QueryParameters.ASPNETCore.csproj", "{ED573900-513B-4204-BBC4-3AE44AB3FBEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RLH.QueryParameters.ASPNETCore", "src\RLH.QueryParameters.ASPNETCore\RLH.QueryParameters.ASPNETCore.csproj", "{ED573900-513B-4204-BBC4-3AE44AB3FBEC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{346BD56F-C1AA-4A8B-B931-737A5B28FCDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RLH.QueryParameters.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RLH.QueryParameters.Entities
 {
-    public class QueryParameters : QueryParametersBase
+    public class QueryParameters : QueryParametersBase , IQueryParameters
     {
         public string Where
         {

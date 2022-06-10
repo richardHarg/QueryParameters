@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using RLH.QueryParameters.Attributes;
 using RLH.QueryParameters.Entities;
+using RLH.QueryParameters.Interfaces;
 using RLH.QueryParameters.Options;
 using RLH.Result;
 
@@ -28,7 +29,7 @@ namespace RLH.QueryParameters.Services
         }
 
 
-        public List<ValidationError> Validate<T>(QueryParametersBase queryParameters)
+        public List<ValidationError> Validate<T>(IQueryParameters queryParameters)
         {
             // Get (from cache) OR if exists in cache get the queryable properties for this data type T
             var classQueryableProperties = GetCurrentClassQueryableProperties<T>();
@@ -40,7 +41,7 @@ namespace RLH.QueryParameters.Services
             return queryParameters.ValidationErrors;
         }
 
-        private void ValidateWhereConditions(QueryParametersBase queryParameters, Dictionary<string, Type> parameters)
+        private void ValidateWhereConditions(IQueryParameters queryParameters, Dictionary<string, Type> parameters)
         {
             foreach (Where operation in queryParameters.WhereConditions)
             {
@@ -80,7 +81,7 @@ namespace RLH.QueryParameters.Services
                 }
             }
         }
-        private void ValidateOrderByConditions(QueryParametersBase queryParameters, Dictionary<string, Type> parameters)
+        private void ValidateOrderByConditions(IQueryParameters queryParameters, Dictionary<string, Type> parameters)
         {
             foreach (OrderBy operation in queryParameters.OrderByConditions)
             {

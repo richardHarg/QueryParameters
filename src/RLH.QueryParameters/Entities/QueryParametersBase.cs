@@ -1,6 +1,6 @@
 ﻿using RLH.QueryParameters.Factories;
 using RLH.QueryParameters.Options;
-using RLH.Result;
+using RLH.Results;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;

@@ -9,7 +9,7 @@ using RLH.QueryParameters.Attributes;
 using RLH.QueryParameters.Entities;
 using RLH.QueryParameters.Interfaces;
 using RLH.QueryParameters.Options;
-using RLH.Result;
+using RLH.Results;
 
 namespace RLH.QueryParameters.Services
 {

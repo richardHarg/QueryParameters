@@ -1,6 +1,6 @@
 ﻿using RLH.QueryParameters.Entities;
 using RLH.QueryParameters.Options;
-using RLH.Result;
+using RLH.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;

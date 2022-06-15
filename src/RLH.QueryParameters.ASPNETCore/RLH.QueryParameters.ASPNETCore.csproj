@@ -12,7 +12,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="RLH.QueryParameters" Version="1.2.0" />
-    <PackageReference Include="RLH.Result" Version="2.1.0" />
+    <PackageReference Include="RLH.Result" Version="4.0.0" />
   </ItemGroup>
 
 </Project>

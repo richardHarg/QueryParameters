@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace RLH.QueryParameters.Entities
 {
-    public abstract class QueryParametersBase
+    public abstract class QueryingParametersBase
     {
         private Dictionary<string, Where> _whereConditions  = new Dictionary<string, Where>();
         private Dictionary<string, OrderBy> _orderByConditions = new Dictionary<string, OrderBy>();
@@ -16,7 +16,7 @@ namespace RLH.QueryParameters.Entities
 
         protected ParsingOptions _parsingOptions;
 
-        public QueryParametersBase()
+        public QueryingParametersBase()
         {
             _parsingOptions = new ParsingOptionsFactory().Create();
         }

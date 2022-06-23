@@ -9,12 +9,13 @@ using System.Threading.Tasks;
 
 namespace RLH.QueryParameters.Interfaces
 {
-    public interface IQueryParameters
+    public interface IQueryingParameters
     {
-        public List<ValidationError> ValidationErrors { get;}
+        public IEnumerable<ValidationError> ValidationErrors { get;}
         public IEnumerable<Where> WhereConditions { get; }
         public IEnumerable<OrderBy> OrderByConditions { get; }
 
+        public void AddValidationError(string id, string message);
         public string BuildDynamicWhereString();
         public string BuildWhereQueryString();
         public string BuildDynamicOrderByString();
@@ -22,7 +23,6 @@ namespace RLH.QueryParameters.Interfaces
 
         public void AddManualWhereCondition(string propertyName, string logicalOperator, string propertyValue);
         public void AddManualOrderByCondition(string propertyName, string sortOrder);
-        public void AddManualOrderByCondition(string propertyName);
 
 
     }

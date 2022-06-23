@@ -16,9 +16,25 @@ namespace RLH.QueryParameters.Extensions
         /// <returns></returns>
         public static IQueryable<T> DynamicLinqFilterOrder<T>(this IQueryable<T> source,string filterBy, string orderBy)
         {
+
+            if (string.IsNullOrWhiteSpace(filterBy) == false)
+            {
+                source = source.Where(filterBy);
+            }
+            if (string.IsNullOrWhiteSpace(orderBy) == false)
+            {
+                source = source.OrderBy(orderBy);
+            }
+            return source;
+
+
+
+            /*
             // Set flags indicating what values, if any, have been passed.
             bool filterValues = !string.IsNullOrWhiteSpace(filterBy);
             bool orderValues = !string.IsNullOrWhiteSpace(orderBy);
+
+            
 
             switch (filterValues)
             {
@@ -47,6 +63,7 @@ namespace RLH.QueryParameters.Extensions
                         return source;
                     }
             }
+            */
         }
 
 

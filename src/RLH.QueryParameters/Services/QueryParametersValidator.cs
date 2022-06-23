@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
 using RLH.QueryParameters.Attributes;
 using RLH.QueryParameters.Entities;
 using RLH.QueryParameters.Interfaces;
@@ -19,17 +14,13 @@ namespace RLH.QueryParameters.Services
 
         private ValidationOptions _options;
 
-        public QueryParametersValidator(IOptions<ValidationOptions> options)
-        {
-            _options = options.Value;
-        }
         public QueryParametersValidator(ValidationOptions options)
         {
             _options = options;
         }
 
 
-        public List<ValidationError> Validate<T>(IQueryParameters queryParameters)
+        public IEnumerable<ValidationError> Validate<T>(IQueryingParameters queryParameters)
         {
             // Get (from cache) OR if exists in cache get the queryable properties for this data type T
             var classQueryableProperties = GetCurrentClassQueryableProperties<T>();
@@ -41,9 +32,9 @@ namespace RLH.QueryParameters.Services
             return queryParameters.ValidationErrors;
         }
 
-        private void ValidateWhereConditions(IQueryParameters queryParameters, Dictionary<string, Type> parameters)
+        private void ValidateWhereConditions(IQueryingParameters queryParameters, Dictionary<string, Type> parameters)
         {
-            foreach (Where operation in queryParameters.WhereConditions)
+            foreach (Where operation in queryParameters.WhereConditions.Where(x => x.External))
             {
                 // Supported Type is used for later validation of logical operators/type conversion and by proxy also 
                 // confirms if the PropertyName provided is valid AND the data type of this property is supported
@@ -55,7 +46,7 @@ namespace RLH.QueryParameters.Services
                     // Check the logical operator value against the support types valid operators
                     if (supportedTypeInfo.Operators.Contains(operation.LogicalOperator) == false)
                     {
-                        queryParameters.ValidationErrors.Add(new ValidationError(operation.PropertyName, $"LogicalOperator '{operation.LogicalOperator}' is not supported. Valid operators are: {string.Join(',', supportedTypeInfo.Operators)}"));
+                        queryParameters.AddValidationError(operation.PropertyName, $"LogicalOperator '{operation.LogicalOperator}' is not supported. Valid operators are: {string.Join(',', supportedTypeInfo.Operators)}");
                     }
 
                     // Check if the PropertyValue field contains some data....
@@ -67,23 +58,23 @@ namespace RLH.QueryParameters.Services
                         }
                         catch
                         {
-                            queryParameters.ValidationErrors.Add(new ValidationError(operation.PropertyName, $"Error parsing PropertyValue '{operation.PropertyValue}' to type '{supportedTypeInfo.Type.Name}'"));
+                            queryParameters.AddValidationError(operation.PropertyName, $"Error parsing PropertyValue '{operation.PropertyValue}' to type '{supportedTypeInfo.Type.Name}'");
                         }
                     }
                     else
                     {
-                        queryParameters.ValidationErrors.Add(new ValidationError(operation.PropertyName, $"PropertyValue cannot be blank or whitespace"));
+                        queryParameters.AddValidationError(operation.PropertyName, $"PropertyValue cannot be blank or whitespace");
                     }
                 }
                 else
                 {
-                    queryParameters.ValidationErrors.Add(new ValidationError(operation.PropertyName, $"PropertyName '{operation.PropertyName}' is not a valid queryable property.'"));
+                    queryParameters.AddValidationError(operation.PropertyName, $"PropertyName '{operation.PropertyName}' is not a valid queryable property.'");
                 }
             }
         }
-        private void ValidateOrderByConditions(IQueryParameters queryParameters, Dictionary<string, Type> parameters)
+        private void ValidateOrderByConditions(IQueryingParameters queryParameters, Dictionary<string, Type> parameters)
         {
-            foreach (OrderBy operation in queryParameters.OrderByConditions)
+            foreach (OrderBy operation in queryParameters.OrderByConditions.Where(x => x.External))
             {
                 // Supported Type is used for later validation of logical operators/type conversion and by proxy also 
                 // confirms if the PropertyName provided is valid AND the data type of this property is supported
@@ -95,12 +86,12 @@ namespace RLH.QueryParameters.Services
                     // Check the sortOrder is of the correct two possible values
                     if (operation.SortOrder != "ascending" && operation.SortOrder != "descending")
                     {
-                        queryParameters.ValidationErrors.Add(new ValidationError(operation.PropertyName, $"Invalid SortOrder value '{operation.SortOrder}'. Must be asc/desc or omitted (default ascending)"));
+                        queryParameters.AddValidationError(operation.PropertyName, $"Invalid SortOrder value '{operation.SortOrder}'. Must be asc/desc or omitted (default ascending)");
                     }
                 }
                 else
                 {
-                    queryParameters.ValidationErrors.Add(new ValidationError(operation.PropertyName, $"PropertyName '{operation.PropertyName}' is not a valid queryable property.'"));
+                    queryParameters.AddValidationError(operation.PropertyName, $"PropertyName '{operation.PropertyName}' is not a valid queryable property.'");
                 }
             }
         }

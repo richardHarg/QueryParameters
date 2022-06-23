@@ -16,7 +16,7 @@ namespace RLH.QueryParameters.Entities
         /// order of 'ascending'
         /// </summary>
         /// <param name="propertyName">Name of the base class property to order</param>
-        public OrderBy(string propertyName, bool external = true) : base(propertyName,external)
+        internal OrderBy(string propertyName, bool external = true) : base(propertyName,external)
         {
             SortOrder = "ascending";
         }
@@ -27,7 +27,7 @@ namespace RLH.QueryParameters.Entities
         /// </summary>
         /// <param name="propertyName">Name of the base class property to order</param>
         /// <param name="sortOrder">Type of sort, either 'ascending' or 'descending'</param>
-        public OrderBy(string propertyName, string sortOrder, bool external = true) : base(propertyName,external)
+        internal OrderBy(string propertyName, string sortOrder, bool external = true) : base(propertyName,external)
         {
             if (string.IsNullOrWhiteSpace(sortOrder) == false)
             {

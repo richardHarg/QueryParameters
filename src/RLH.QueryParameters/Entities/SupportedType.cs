@@ -17,7 +17,7 @@ namespace RLH.QueryParameters.Entities
         /// <param name="type">Data type e.g. int</param>
         /// <param name="supportedOperators">list of logical operators valid for this type</param>
         /// <param name="tryParse">Predicate method used to parse string > this type</param>
-        public SupportedType(Type type,List<string> supportedOperators,TypeConverter typeConverter)
+        public SupportedType(Type type, List<string> supportedOperators, TypeConverter typeConverter)
         {
             Type = type;
             Operators = supportedOperators ?? throw new ArgumentNullException(nameof(supportedOperators));
@@ -27,15 +27,15 @@ namespace RLH.QueryParameters.Entities
         /// <summary>
         /// Data type e.g. int
         /// </summary>
-        public Type Type { get; private set; }
+        public readonly Type Type;
 
         /// <summary>
         /// list of logical operators valid for this type
         /// </summary>
-        public List<string> Operators { get; private set; } = new List<string>();
+        public readonly List<string> Operators;
         /// <summary>
         /// Predicate method used to parse string > this type
         /// </summary>
-        public TypeConverter TypeConverter { get; private set; }
+        public readonly TypeConverter TypeConverter;
     }
 }

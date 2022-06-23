@@ -11,6 +11,6 @@ namespace RLH.QueryParameters.Services
 {
     public interface IQueryParametersValidator : IDisposable
     {
-        public List<ValidationError> Validate<T>(IQueryParameters queryParameters);
+        public IEnumerable<ValidationError> Validate<T>(IQueryingParameters queryParameters);
     }
 }

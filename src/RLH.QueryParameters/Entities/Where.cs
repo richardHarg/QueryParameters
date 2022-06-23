@@ -17,7 +17,7 @@ namespace RLH.QueryParameters.Entities
         /// <param name="propertyName">Name of the base class property to order</param>
         /// <param name="logicalOperator">Logical operator to use, e.g. ==</param>
         /// <param name="propertyValue">Value of the property to search for</param>
-        public Where(string propertyName, string logicalOperator, string propertyValue,bool external = true) : base(propertyName,external)
+        internal Where(string propertyName, string logicalOperator, string propertyValue,bool external = true) : base(propertyName,external)
         {
             LogicalOperator = logicalOperator ?? logicalOperator;
             PropertyValue = propertyValue ?? propertyValue.ToLower();

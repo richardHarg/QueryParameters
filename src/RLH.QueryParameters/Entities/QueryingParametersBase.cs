@@ -1,24 +1,26 @@
 ﻿using RLH.QueryParameters.Factories;
+using RLH.QueryParameters.Interfaces;
 using RLH.QueryParameters.Options;
 using RLH.Results;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 
 namespace RLH.QueryParameters.Entities
 {
-    public abstract class QueryingParametersBase
+    public abstract class QueryingParametersBase : IQueryingParameters
     {
-        private Dictionary<string, Where> _whereConditions  = new Dictionary<string, Where>();
-        private Dictionary<string, OrderBy> _orderByConditions = new Dictionary<string, OrderBy>();
-        public List<ValidationError> ValidationErrors { get; private set; } = new List<ValidationError>();
+        /// <summary>
+        /// Internal Dictionaries holding where and orderby operations
+        /// </summary>
+        private Dictionary<string, Where> WhereConditionsDictionary  = new Dictionary<string, Where>();
+        private Dictionary<string, OrderBy> OrderByConditionsDictionary = new Dictionary<string, OrderBy>();
+        private List<ValidationError> ValidationErrorsCollection = new List<ValidationError>();
 
-        protected ParsingOptions _parsingOptions;
+        protected ParsingOptions ParsingOptions { get; private set; }
 
         public QueryingParametersBase()
         {
-            _parsingOptions = new ParsingOptionsFactory().Create();
+            ParsingOptions = new ParsingOptionsFactory().Create();
         }
 
         /// <summary>
@@ -26,17 +28,24 @@ namespace RLH.QueryParameters.Entities
         /// </summary>
         public IEnumerable<Where> WhereConditions
         {
-            get { return _whereConditions.Values; }
+            get { return WhereConditionsDictionary.Values; }
         }
         /// <summary>
         /// Returns a collection of the current OrderBy Conditions
         /// </summary>
         public IEnumerable<OrderBy> OrderByConditions
         {
-            get { return _orderByConditions.Values; }
+            get { return OrderByConditionsDictionary.Values; }
         }
-      
+        public IEnumerable<ValidationError> ValidationErrors
+        {
+            get { return ValidationErrorsCollection; }
+        }
 
+        public void AddValidationError(string id, string message)
+        {
+            ValidationErrorsCollection.Add(new ValidationError(id, message));
+        }
 
         /// <summary>
         /// Builds a DynamicLINQ formatted string from the current Where conditions
@@ -45,7 +54,7 @@ namespace RLH.QueryParameters.Entities
         public virtual string BuildDynamicWhereString()
         {
             var builtString = "";
-            foreach (Where operation in _whereConditions.Values)
+            foreach (Where operation in WhereConditionsDictionary.Values)
             {
                 if (builtString != "")
                 {
@@ -72,14 +81,14 @@ namespace RLH.QueryParameters.Entities
         public virtual string BuildWhereQueryString()
         {
             var builtString = "";
-            foreach (Where operation in _whereConditions.Values.Where(x => x.External == true))
+            foreach (Where operation in WhereConditionsDictionary.Values.Where(x => x.External == true))
             {
                 if (builtString != "")
                 {
-                    builtString += _parsingOptions.SeperationChar;
+                    builtString += ParsingOptions.SeperationChar;
                 }
 
-                builtString += $"{operation.PropertyName}{_parsingOptions.SpaceChar}{operation.LogicalOperator}{_parsingOptions.SpaceChar}{operation.PropertyValue.Replace(' ',_parsingOptions.SpaceChar)}";
+                builtString += $"{operation.PropertyName}{ParsingOptions.SpaceChar}{operation.LogicalOperator}{ParsingOptions.SpaceChar}{operation.PropertyValue.Replace(' ',ParsingOptions.SpaceChar)}";
             }
             return builtString;
         }
@@ -97,27 +106,27 @@ namespace RLH.QueryParameters.Entities
             }
 
             // Split the values using the designated seperation char
-            foreach (string operation in value.Split(_parsingOptions.SeperationChar))
+            foreach (string operation in value.Split(ParsingOptions.SeperationChar))
             {
                 // Empty or whitespace string as a result of the split operation? Ignore
                 if (string.IsNullOrWhiteSpace(operation) == false)
                 {
                     // Use Regex and a provided pattern to match the string and attempt to pull out groups with the provided names
-                    var values = GetNamedValues(operation, _parsingOptions.WherePattern, new List<string>() { "PropertyName", "LogicalOperator", "PropertyValue" });
+                    var values = GetNamedValues(operation, ParsingOptions.WherePattern, new List<string>() { "PropertyName", "LogicalOperator", "PropertyValue" });
 
                     // FilterBy should be 3 values (as per list above) if this is the case use these to create and add a new FilterBy operation
                     if (values.Count == 3)
                     {
                         // there may be spaces or space chars in the PropertyValue string, for data parsing and comparison these should be replaced
                         // by a space.
-                        var formattedValue = values["PropertyValue"].Replace(_parsingOptions.SpaceChar, ' ');
+                        var formattedValue = values["PropertyValue"].Replace(ParsingOptions.SpaceChar, ' ');
 
                         AddParsedWhereCondition(values["PropertyName"], values["LogicalOperator"], formattedValue);
                     }
                     // If the number of values is NOT correct then log an error
                     else
                     {
-                        ValidationErrors.Add(new ValidationError(operation, $"Unable to parse FilterBy operation as the formatting doesnt match. Values should be formatted as '{_parsingOptions.WherePatternFriendly}' seperated with a '{_parsingOptions.SpaceChar}' character and chained with '{_parsingOptions.SeperationChar}' characters."));
+                        ValidationErrorsCollection.Add(new ValidationError(operation, $"Unable to parse FilterBy operation as the formatting doesnt match. Values should be formatted as '{ParsingOptions.WherePatternFriendly}' seperated with a '{ParsingOptions.SpaceChar}' character and chained with '{ParsingOptions.SeperationChar}' characters."));
                     }
                 }
             }
@@ -131,7 +140,7 @@ namespace RLH.QueryParameters.Entities
         {
             var builtString = "";
 
-            foreach (OrderBy operation in _orderByConditions.Values)
+            foreach (OrderBy operation in OrderByConditionsDictionary.Values)
             {
                 if (builtString != "")
                 {
@@ -151,14 +160,14 @@ namespace RLH.QueryParameters.Entities
         public virtual string BuildOrderByQueryString()
         {
             var builtString = "";
-            foreach (OrderBy operation in _orderByConditions.Values.Where(x => x.External == true))
+            foreach (OrderBy operation in OrderByConditionsDictionary.Values.Where(x => x.External == true))
             {
                 if (builtString != "")
                 {
-                    builtString += _parsingOptions.SeperationChar;
+                    builtString += ParsingOptions.SeperationChar;
                 }
 
-                builtString += $"{operation.PropertyName}{_parsingOptions.SpaceChar}{operation.SortOrder}";
+                builtString += $"{operation.PropertyName}{ParsingOptions.SpaceChar}{operation.SortOrder}";
             }
             return builtString;
         }
@@ -169,7 +178,6 @@ namespace RLH.QueryParameters.Entities
         /// <param name="value">OrderBy query string value</param>
         protected virtual void ParseOrderByQueryString(string value)
         {
-
             // Check if the inbound string is null or empty, if so no processing required
             if (string.IsNullOrWhiteSpace(value))
             {
@@ -177,14 +185,14 @@ namespace RLH.QueryParameters.Entities
             }
 
             // Split the values using the designated seperation char
-            foreach (string operation in value.Split(_parsingOptions.SeperationChar))
+            foreach (string operation in value.Split(ParsingOptions.SeperationChar))
             {
-                // If this split has resulted in an empty string? if no ignore
+                // If this split has resulted in an empty string? if so, ignore
                 if (string.IsNullOrWhiteSpace(operation) == false)
                 {
                     // Use Regex and a provided pattern to match the string and attempt to pull out groups with the provided names
-                    var twoPatternValues = GetNamedValues(operation, _parsingOptions.OrderByPattern, new List<string>() { "PropertyName", "SortOrder" });
-                    var singlePatternValues = GetNamedValues(operation, _parsingOptions.OrderByPatternSingle, new List<string>() { "PropertyName" });
+                    var twoPatternValues = GetNamedValues(operation, ParsingOptions.OrderByPattern, new List<string>() { "PropertyName", "SortOrder" });
+                    var singlePatternValues = GetNamedValues(operation, ParsingOptions.OrderByPatternSingle, new List<string>() { "PropertyName" });
                     // OR they can be two values with PropertyName and SortOrder
                     if (twoPatternValues.Count() == 2)
                     {
@@ -196,7 +204,7 @@ namespace RLH.QueryParameters.Entities
                     }
                     else
                     {
-                        ValidationErrors.Add(new ValidationError(operation, $"Unable to parse OrderBy operation as the formatting doesnt match. Values should be formatted as '{_parsingOptions.OrderByPatternFriendly}' seperated with a '{_parsingOptions.SpaceChar}' character and chained with ',' characters."));
+                        ValidationErrorsCollection.Add(new ValidationError(operation, $"Unable to parse OrderBy operation as the formatting doesnt match. Values should be formatted as '{ParsingOptions.OrderByPatternFriendly}' seperated with a '{ParsingOptions.SpaceChar}' character and chained with '{ParsingOptions.SeperationChar}' characters."));
 
                     }
                 }
@@ -214,7 +222,7 @@ namespace RLH.QueryParameters.Entities
         /// <param name="propertyValue">Value to check for</param>
         protected void AddParsedWhereCondition(string propertyName, string logicalOperator, string propertyValue)
         {
-            AddToConditionDictionary(_whereConditions, new Where(propertyName, logicalOperator, propertyValue, true));
+            AddToConditionDictionary(WhereConditionsDictionary, new Where(propertyName, logicalOperator, propertyValue, true));
         }
         /// <summary>
         /// Adds a new OrderBy condition, call this method from inheriting classes when you need
@@ -223,20 +231,11 @@ namespace RLH.QueryParameters.Entities
         /// </summary>
         /// <param name="propertyName">Name of the class property to query</param>
         /// <param name="sortOrder">Sort order to apply</param>
-        protected void AddParsedOrderByCondition(string propertyName, string sortOrder)
+        protected void AddParsedOrderByCondition(string propertyName, string sortOrder = "ascending")
         {
-            AddToConditionDictionary(_orderByConditions, new OrderBy(propertyName, sortOrder, true));
+            AddToConditionDictionary(OrderByConditionsDictionary, new OrderBy(propertyName, sortOrder, true));
         }
-        /// <summary>
-        /// Adds a new OrderBy condition, call this method from inheriting classes when you need
-        /// to add a value parsed from a query string e.g. Externally created.
-        /// For adding defaults/manual conditions call the public 'AddOrderBy' method instead
-        /// </summary>
-        /// <param name="propertyName">Name of the class property to query</param>
-        protected void AddParsedOrderByCondition(string propertyName)
-        {
-            AddToConditionDictionary(_orderByConditions, new OrderBy(propertyName, "ascending", true));
-        }
+     
 
         //// <summary>
         /// Adds a new Where condition, used to ensure default sorting and/or for adding conditions
@@ -249,7 +248,22 @@ namespace RLH.QueryParameters.Entities
         /// <param name="propertyValue">Value to check for</param>
         public void AddManualWhereCondition(string propertyName,string logicalOperator,string propertyValue)
         {
-            AddToConditionDictionary(_whereConditions, new Where(propertyName,logicalOperator,propertyValue,false));
+            if (string.IsNullOrEmpty(propertyName))
+            {
+                throw new ArgumentException($"'{nameof(propertyName)}' cannot be null or empty.", nameof(propertyName));
+            }
+
+            if (string.IsNullOrEmpty(logicalOperator))
+            {
+                throw new ArgumentException($"'{nameof(logicalOperator)}' cannot be null or empty.", nameof(logicalOperator));
+            }
+
+            if (string.IsNullOrEmpty(propertyValue))
+            {
+                throw new ArgumentException($"'{nameof(propertyValue)}' cannot be null or empty.", nameof(propertyValue));
+            }
+
+            AddToConditionDictionary(WhereConditionsDictionary, new Where(propertyName,logicalOperator,propertyValue,false));
         }
         //// <summary>
         /// Adds a new OrderBy condition, used to ensure default sorting and/or for adding conditions
@@ -259,50 +273,20 @@ namespace RLH.QueryParameters.Entities
         /// </summary>
         /// <param name="propertyName">Name of the class property to query</param>
         /// <param name="sortOrder">Sort order to apply</param>
-        public void AddManualOrderByCondition(string propertyName,string sortOrder)
+        public void AddManualOrderByCondition(string propertyName,string sortOrder = "ascending")
         {
-            AddToConditionDictionary(_orderByConditions, new OrderBy(propertyName,sortOrder,false));
-        }
-        //// <summary>
-        /// Adds a new Where condition, used to ensure default sorting and/or for adding conditions
-        /// manually which are not permitted externally. e.g. User cannot sort by X property but a 
-        /// condition can be added AFTER validation to sort by that value. These conditions ARE used
-        /// when building the DynamicLINQ string but NOT included when building outbound query strings
-        /// </summary>
-        /// <param name="propertyName">Name of the class property to query</param>
-        public void AddManualOrderByCondition(string propertyName)
-        {
-            AddToConditionDictionary(_orderByConditions, new OrderBy(propertyName, "ascending", false));
-        }
-
-      /*
-        public void RemoveWhere(string key)
-        {
-            RemoveFromConditionDictionary(_whereConditions, key);
-        }
-        public void RemoveOrderBy(string key)
-        {
-            RemoveFromConditionDictionary(_orderByConditions, key);
-        }
-      */
-
-
-
-        /// <summary>
-        /// Attempts to remove a given entry (type T) from the passed dictionary using the provided
-        /// key value
-        /// </summary>
-        /// <typeparam name="T">Type e.g. Where or OrderBy</typeparam>
-        /// <param name="conditionDictionary">Dictionary to remove the value from</param>
-        /// <param name="key">Key value used for dictionary</param>
-        private void RemoveFromConditionDictionary<T>(Dictionary<string,T> conditionDictionary,string key)
-        {
-            if (conditionDictionary.ContainsKey(key) == true)
+            if (string.IsNullOrEmpty(propertyName))
             {
-                conditionDictionary.Remove(key);
+                throw new ArgumentException($"'{nameof(propertyName)}' cannot be null or empty.", nameof(propertyName));
             }
-        }
 
+            if (string.IsNullOrEmpty(sortOrder))
+            {
+                throw new ArgumentException($"'{nameof(sortOrder)}' cannot be null or empty.", nameof(sortOrder));
+            }
+
+            AddToConditionDictionary(OrderByConditionsDictionary, new OrderBy(propertyName,sortOrder,false));
+        }
         /// <summary>
         /// Attempts to add a given value (of T) to the passed dictionary. If the entry already exists
         /// AND overwrite == true then this is removed before adding the new entry
@@ -314,6 +298,16 @@ namespace RLH.QueryParameters.Entities
         /// <param name="overwrite">If the existing entry (if any) is removed and replace by the 'value' parameter</param>
         private void AddToConditionDictionary<T>(Dictionary<string,T> conditionDictionary,T value) where T : Select
         {
+            if (conditionDictionary is null)
+            {
+                throw new ArgumentNullException(nameof(conditionDictionary));
+            }
+
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             if (conditionDictionary.ContainsKey(value.PropertyName) == false)
             {
                 conditionDictionary.Add(value.PropertyName, value);

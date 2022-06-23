@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RLH.QueryParameters.ASPNETC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{346BD56F-C1AA-4A8B-B931-737A5B28FCDA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLH.QueryParameters.Tests", "tests\RLH.QueryParameters.Tests\RLH.QueryParameters.Tests.csproj", "{5EA878FC-32D2-47D5-9C38-6135089BECD1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{ED573900-513B-4204-BBC4-3AE44AB3FBEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED573900-513B-4204-BBC4-3AE44AB3FBEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED573900-513B-4204-BBC4-3AE44AB3FBEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EA878FC-32D2-47D5-9C38-6135089BECD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EA878FC-32D2-47D5-9C38-6135089BECD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EA878FC-32D2-47D5-9C38-6135089BECD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EA878FC-32D2-47D5-9C38-6135089BECD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{EC5D51F5-CA1D-433C-B803-790081C88823} = {425506B9-0327-4CF4-922B-19C9DC71C411}
 		{ED573900-513B-4204-BBC4-3AE44AB3FBEC} = {425506B9-0327-4CF4-922B-19C9DC71C411}
+		{5EA878FC-32D2-47D5-9C38-6135089BECD1} = {346BD56F-C1AA-4A8B-B931-737A5B28FCDA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {33326EF0-3ECF-4EC4-8B9E-1F69DCD001CF}

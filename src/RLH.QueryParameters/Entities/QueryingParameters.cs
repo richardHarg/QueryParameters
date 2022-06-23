@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RLH.QueryParameters.Entities
 {
-    public class QueryingParameters : QueryingParametersBase , IQueryParameters
+    public class QueryingParameters : QueryingParametersBase
     {
         public string Where
         {

@@ -16,7 +16,7 @@ namespace RLH.QueryParameters.ASPNETCore.Extensions
         /// </summary>
         /// <param name="modelstate"></param>
         /// <param name="errorDictionary"></param>
-        public static void AddQueryParameterErrors(this ModelStateDictionary modelstate,List<ValidationError> validationErrors)
+        public static void AddQueryParameterErrors(this ModelStateDictionary modelstate,IEnumerable<ValidationError> validationErrors)
         {
             foreach (ValidationError error in validationErrors)
             {

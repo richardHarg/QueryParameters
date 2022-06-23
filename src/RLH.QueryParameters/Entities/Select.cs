@@ -16,7 +16,7 @@ namespace RLH.QueryParameters.Entities
         /// Creates a new Select with a given property name
         /// </summary>
         /// <param name="propertyName">Name of the base class property to select</param>
-        public Select(string propertyName,bool external)
+        internal Select(string propertyName,bool external)
         {
             PropertyName = propertyName ?? propertyName.ToLower();
             External = external;

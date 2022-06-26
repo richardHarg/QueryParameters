@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RLH.QueryParameters.ASPNETC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{346BD56F-C1AA-4A8B-B931-737A5B28FCDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLH.QueryParameters.Tests", "tests\RLH.QueryParameters.Tests\RLH.QueryParameters.Tests.csproj", "{5EA878FC-32D2-47D5-9C38-6135089BECD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RLH.QueryParameters.Tests", "tests\RLH.QueryParameters.Tests\RLH.QueryParameters.Tests.csproj", "{5EA878FC-32D2-47D5-9C38-6135089BECD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

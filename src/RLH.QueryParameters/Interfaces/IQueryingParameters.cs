@@ -22,7 +22,7 @@ namespace RLH.QueryParameters.Interfaces
         public string BuildOrderByQueryString();
 
         public void AddManualWhereCondition(string propertyName, string logicalOperator, string propertyValue);
-        public void AddManualOrderByCondition(string propertyName, string sortOrder);
+        public void AddManualOrderByCondition(string propertyName, string sortOrder = "ascending");
 
 
     }

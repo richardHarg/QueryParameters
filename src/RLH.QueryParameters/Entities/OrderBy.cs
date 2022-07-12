@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RLH.QueryParameters.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace RLH.QueryParameters.Entities
     /// <summary>
     /// Contains details of a 'OrderBy' condition, used when querying data in a backing store
     /// </summary>
-    public sealed class OrderBy : Select
+    public sealed class OrderBy : Select , IOrderBy
     {
         /// <summary>
         /// Constructs a new OrderBy with a given property name and default sort
@@ -47,6 +48,6 @@ namespace RLH.QueryParameters.Entities
         /// <summary>
         /// Sort order associated with this condition
         /// </summary>
-        public readonly string SortOrder;
+        public string SortOrder { get; private set; }
     }
 }

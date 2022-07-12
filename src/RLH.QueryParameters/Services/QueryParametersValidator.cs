@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Reflection;
-using RLH.QueryParameters.Attributes;
+using RLH.QueryParameters.Core.Attributes;
+using RLH.QueryParameters.Core.Entities;
+using RLH.QueryParameters.Core.Options;
+using RLH.QueryParameters.Core.Services;
 using RLH.QueryParameters.Entities;
-using RLH.QueryParameters.Interfaces;
+
 using RLH.QueryParameters.Options;
-using RLH.Results;
 
 namespace RLH.QueryParameters.Services
 {
@@ -12,15 +14,15 @@ namespace RLH.QueryParameters.Services
     {
         private bool disposedValue;
 
-        private ValidationOptions _options;
+        private IValidationOptions _options;
 
-        public QueryParametersValidator(ValidationOptions options)
+        public QueryParametersValidator(IValidationOptions options)
         {
             _options = options;
         }
 
 
-        public IEnumerable<ValidationError> Validate<T>(IQueryingParameters queryParameters)
+        public Dictionary<string, string> Validate<T>(IQueryingParameters queryParameters)
         {
             // Get (from cache) OR if exists in cache get the queryable properties for this data type T
             var classQueryableProperties = GetCurrentClassQueryableProperties<T>();
@@ -154,12 +156,12 @@ namespace RLH.QueryParameters.Services
         /// <param name="propertyName">Name of Property to search for</param>
         /// <param name="queryableProperties">Dictionary with PropertyNames/Types of valid queryable properties</param>
         /// <returns></returns>
-        private SupportedType FindSupportedTypeForQueryableProperty(Dictionary<string, Type> properteies, string propertyName)
+        private ISupportedType FindSupportedTypeForQueryableProperty(Dictionary<string, Type> properteies, string propertyName)
         {
             // Check if the class specific list of properties contains a key which matches the provided PropertyName
             if (properteies.TryGetValue(propertyName.ToLower(), out Type type) == true)
             {
-                if (_options.SupportedTypes.TryGetValue(type, out SupportedType value) == true)
+                if (_options.SupportedTypes.TryGetValue(type, out ISupportedType value) == true)
                 {
                     return value;
                 }

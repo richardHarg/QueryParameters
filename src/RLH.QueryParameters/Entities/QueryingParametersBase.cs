@@ -1,7 +1,7 @@
-﻿using RLH.QueryParameters.Factories;
-using RLH.QueryParameters.Interfaces;
+﻿using RLH.QueryParameters.Core.Entities;
+using RLH.QueryParameters.Core.Options;
+using RLH.QueryParameters.Factories;
 using RLH.QueryParameters.Options;
-using RLH.Results;
 using System.Text.RegularExpressions;
 
 
@@ -14,9 +14,9 @@ namespace RLH.QueryParameters.Entities
         /// </summary>
         private Dictionary<string, Where> WhereConditionsDictionary  = new Dictionary<string, Where>();
         private Dictionary<string, OrderBy> OrderByConditionsDictionary = new Dictionary<string, OrderBy>();
-        private List<ValidationError> ValidationErrorsCollection = new List<ValidationError>();
+        private Dictionary<string, string> ValidationErrorsCollection = new Dictionary<string, string>();
 
-        protected ParsingOptions ParsingOptions { get; private set; }
+        protected IParsingOptions ParsingOptions { get; private set; }
 
         public QueryingParametersBase()
         {
@@ -26,25 +26,27 @@ namespace RLH.QueryParameters.Entities
         /// <summary>
         /// Returns a collection of the current Where Conditions
         /// </summary>
-        public IEnumerable<Where> WhereConditions
+        public IEnumerable<IWhere> WhereConditions
         {
             get { return WhereConditionsDictionary.Values; }
         }
         /// <summary>
         /// Returns a collection of the current OrderBy Conditions
         /// </summary>
-        public IEnumerable<OrderBy> OrderByConditions
+        public IEnumerable<IOrderBy> OrderByConditions
         {
             get { return OrderByConditionsDictionary.Values; }
         }
-        public IEnumerable<ValidationError> ValidationErrors
+        public Dictionary<string,string> ValidationErrors
         {
-            get { return ValidationErrorsCollection; }
+            get {
+                return ValidationErrorsCollection;
+                }
         }
 
         public void AddValidationError(string id, string message)
         {
-            ValidationErrorsCollection.Add(new ValidationError(id, message));
+            ValidationErrorsCollection.Add(id, message);
         }
 
         /// <summary>
@@ -126,7 +128,7 @@ namespace RLH.QueryParameters.Entities
                     // If the number of values is NOT correct then log an error
                     else
                     {
-                        ValidationErrorsCollection.Add(new ValidationError(operation, $"Unable to parse FilterBy operation as the formatting doesnt match. Values should be formatted as '{ParsingOptions.WherePatternFriendly}' seperated with a '{ParsingOptions.SpaceChar}' character and chained with '{ParsingOptions.SeperationChar}' characters."));
+                        ValidationErrorsCollection.Add(operation, $"Unable to parse FilterBy operation as the formatting doesnt match. Values should be formatted as '{ParsingOptions.WherePatternFriendly}' seperated with a '{ParsingOptions.SpaceChar}' character and chained with '{ParsingOptions.SeperationChar}' characters.");
                     }
                 }
             }
@@ -204,7 +206,7 @@ namespace RLH.QueryParameters.Entities
                     }
                     else
                     {
-                        ValidationErrorsCollection.Add(new ValidationError(operation, $"Unable to parse OrderBy operation as the formatting doesnt match. Values should be formatted as '{ParsingOptions.OrderByPatternFriendly}' seperated with a '{ParsingOptions.SpaceChar}' character and chained with '{ParsingOptions.SeperationChar}' characters."));
+                        ValidationErrorsCollection.Add(operation, $"Unable to parse OrderBy operation as the formatting doesnt match. Values should be formatted as '{ParsingOptions.OrderByPatternFriendly}' seperated with a '{ParsingOptions.SpaceChar}' character and chained with '{ParsingOptions.SeperationChar}' characters.");
 
                     }
                 }

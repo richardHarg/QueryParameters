@@ -1,4 +1,4 @@
-﻿using RLH.QueryParameters.Interfaces;
+﻿using RLH.QueryParameters.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RLH.QueryParameters.Entities
 {
-    public class PaginationParameters
+    public class PaginationParameters : IPaginationParameters
     {
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;

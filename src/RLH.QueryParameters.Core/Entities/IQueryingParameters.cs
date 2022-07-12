@@ -1,19 +1,16 @@
-﻿using RLH.QueryParameters.Entities;
-using RLH.QueryParameters.Options;
-using RLH.Results;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RLH.QueryParameters.Interfaces
+namespace RLH.QueryParameters.Core.Entities
 {
     public interface IQueryingParameters
     {
-        public IEnumerable<ValidationError> ValidationErrors { get;}
-        public IEnumerable<Where> WhereConditions { get; }
-        public IEnumerable<OrderBy> OrderByConditions { get; }
+        public Dictionary<string,string> ValidationErrors { get;}
+        public IEnumerable<IWhere> WhereConditions { get; }
+        public IEnumerable<IOrderBy> OrderByConditions { get; }
 
         public void AddValidationError(string id, string message);
         public string BuildDynamicWhereString();

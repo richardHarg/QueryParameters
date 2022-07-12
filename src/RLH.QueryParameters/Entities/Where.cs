@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RLH.QueryParameters.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace RLH.QueryParameters.Entities
     /// <summary>
     /// Contains details of a 'Where' condition, used when querying data in a backing store
     /// </summary>
-    public sealed class Where : Select
+    public sealed class Where : Select , IWhere
     {
         /// <summary>
         /// Create a new where condition with the provided property name/operator and value
@@ -25,10 +26,10 @@ namespace RLH.QueryParameters.Entities
         /// <summary>
         /// Logical operator associated with this condition
         /// </summary>
-        public readonly string LogicalOperator;
+        public string LogicalOperator { get; private set; }
         /// <summary>
         /// Property value associated with this condition
         /// </summary>
-        public readonly string PropertyValue;
+        public string PropertyValue { get; private set; }
     }
 }

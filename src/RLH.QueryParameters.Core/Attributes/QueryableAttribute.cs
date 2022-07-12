@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RLH.QueryParameters.Attributes
+namespace RLH.QueryParameters.Core.Attributes
 {
     /// <summary>
     /// Indicates that this Property can be filtered/ordered by DynamicLINQ via the request query string

@@ -1,5 +1,7 @@
 ﻿
 using Microsoft.Extensions.DependencyInjection;
+using RLH.QueryParameters.Core.Entities;
+using RLH.QueryParameters.Core.Services;
 using RLH.QueryParameters.Entities;
 using RLH.QueryParameters.Factories;
 using RLH.QueryParameters.Options;
@@ -39,7 +41,7 @@ namespace RLH.QueryParameters.ASPNETCore.Extensions
 
 
 
-        private static Dictionary<Type, SupportedType> BuiltInSupportedTypes
+        private static Dictionary<Type, ISupportedType> BuiltInSupportedTypes
         {
             get
             {
@@ -50,7 +52,7 @@ namespace RLH.QueryParameters.ASPNETCore.Extensions
             }
         }
 
-        private static Dictionary<Type, SupportedType> GetBuiltInSupportedTypesWithAdditionalSupportedTypes(Dictionary<Type, SupportedType> additionalSupportedTypes)
+        private static Dictionary<Type, ISupportedType> GetBuiltInSupportedTypesWithAdditionalSupportedTypes(Dictionary<Type, SupportedType> additionalSupportedTypes)
         {
             // Get the built in types
             var supportedTypes = BuiltInSupportedTypes;

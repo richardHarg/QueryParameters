@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RLH.QueryParameters.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace RLH.QueryParameters.Entities
     /// <summary>
     /// Contains details of a 'Select' condition, used when querying data in a backing store
     /// </summary>
-    public class Select
+    public class Select : ISelect
     {
         /// <summary>
         /// Creates a new Select with a given property name
@@ -24,13 +25,13 @@ namespace RLH.QueryParameters.Entities
         /// <summary>
         /// Name of the base class property
         /// </summary>
-        public readonly string PropertyName;
+        public string PropertyName { get; private set; }
 
         /// <summary>
         /// Flag to indicate if this operation was created externally
         /// (via query string parsing) or manually from calling
         /// the 'AddOrderBy' or 'AddWhere' methods
         /// </summary>
-        public readonly bool External;
+        public bool External { get; private set; }
     }
 }

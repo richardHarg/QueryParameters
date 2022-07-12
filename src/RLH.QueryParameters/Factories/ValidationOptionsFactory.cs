@@ -1,4 +1,6 @@
-﻿using RLH.QueryParameters.Entities;
+﻿using RLH.QueryParameters.Core.Entities;
+using RLH.QueryParameters.Core.Options;
+using RLH.QueryParameters.Entities;
 using RLH.QueryParameters.Options;
 using System;
 using System.Collections.Generic;
@@ -21,7 +23,7 @@ namespace RLH.QueryParameters.Factories
         /// </summary>
         /// <param name="version">Version to create</param>
         /// <returns>QueryOptions</returns>
-        public ValidationOptions Create(int version = 1)
+        public IValidationOptions Create(int version = 1)
         {
             switch (version)
             {
@@ -33,11 +35,11 @@ namespace RLH.QueryParameters.Factories
             }
         }
 
-        public Dictionary<Type,SupportedType> GetSupportedTypes()
+        public Dictionary<Type,ISupportedType> GetSupportedTypes()
         {
             var converterFactory = new TypeConverterFactory();
             
-                return new Dictionary<Type, SupportedType>()
+                return new Dictionary<Type, ISupportedType>()
             {
                 {typeof(string),new SupportedType(typeof(string), new List<string>() { "==", "*=" },converterFactory.GetConverterForType(typeof(string)))},
                 {typeof(int),new SupportedType(typeof(int), new List<string>() { "<", ">", "==", ">=", "<="  },converterFactory.GetConverterForType(typeof(int))) },

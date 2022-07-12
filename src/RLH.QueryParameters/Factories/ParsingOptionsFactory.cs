@@ -1,4 +1,5 @@
-﻿using RLH.QueryParameters.Options;
+﻿using RLH.QueryParameters.Core.Options;
+using RLH.QueryParameters.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace RLH.QueryParameters.Factories
 {
     internal sealed class ParsingOptionsFactory
     {
-        public ParsingOptions Create(int version = 1)
+        public IParsingOptions Create(int version = 1)
         {
             switch (version)
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RLH.QueryParameters.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -9,7 +10,7 @@ namespace RLH.QueryParameters.Entities
     /// These include valid filtering operations e.g. '==' 
     /// as well as a predicate method to test if the inbound string parses to the correct datatype
     /// </summary>
-    public sealed class SupportedType
+    public sealed class SupportedType : ISupportedType
     {
         /// <summary>
         /// Create a new SupportedType associated with a given data type.
@@ -27,15 +28,15 @@ namespace RLH.QueryParameters.Entities
         /// <summary>
         /// Data type e.g. int
         /// </summary>
-        public readonly Type Type;
+        public Type Type { get; private set; }
 
         /// <summary>
         /// list of logical operators valid for this type
         /// </summary>
-        public readonly List<string> Operators;
+        public List<string> Operators { get; private set; }
         /// <summary>
         /// Predicate method used to parse string > this type
         /// </summary>
-        public readonly TypeConverter TypeConverter;
+        public  TypeConverter TypeConverter { get; private set; }
     }
 }

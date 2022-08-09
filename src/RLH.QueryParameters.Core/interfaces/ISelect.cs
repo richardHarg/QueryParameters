@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RLH.QueryParameters.Core.Entities
+namespace RLH.QueryParameters.Core
 {
     public interface ISelect
     {
         public bool External { get; }
-        public string PropertyName { get;}
+        public string PropertyName { get; }
     }
 }

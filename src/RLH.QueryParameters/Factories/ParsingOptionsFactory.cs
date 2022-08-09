@@ -1,12 +1,7 @@
-﻿using RLH.QueryParameters.Core.Options;
-using RLH.QueryParameters.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using RLH.QueryParameters.Core;
 
-namespace RLH.QueryParameters.Factories
+namespace RLH.QueryParameters
 {
     internal sealed class ParsingOptionsFactory
     {

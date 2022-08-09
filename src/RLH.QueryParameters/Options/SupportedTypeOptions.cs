@@ -1,12 +1,11 @@
-﻿using RLH.QueryParameters.Core.Entities;
-using RLH.QueryParameters.Core.Options;
-using RLH.QueryParameters.Entities;
+﻿
+using RLH.QueryParameters.Core;
 using System;
 using System.Collections.Generic;
 
-namespace RLH.QueryParameters.Options
+namespace RLH.QueryParameters
 {
-    public sealed class ValidationOptions : IValidationOptions
+    public sealed class SupportedTypeOptions : ISupportedTypeOptions
     {
         /// <summary>
         /// Dictionary of supported inbound Where property values. Contains the type, valid operations (e.g. ==) and

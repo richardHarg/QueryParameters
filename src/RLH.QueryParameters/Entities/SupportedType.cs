@@ -1,9 +1,9 @@
-﻿using RLH.QueryParameters.Core.Entities;
+﻿using RLH.QueryParameters.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace RLH.QueryParameters.Entities
+namespace RLH.QueryParameters
 {
     /// <summary>
     /// Used for DynamicLINQ parsing this class contains details of a specific data type.

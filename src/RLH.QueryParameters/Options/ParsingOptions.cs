@@ -1,7 +1,7 @@
 ﻿
-using RLH.QueryParameters.Core.Options;
+using RLH.QueryParameters.Core;
 
-namespace RLH.QueryParameters.Options
+namespace RLH.QueryParameters
 {
     public sealed class ParsingOptions : IParsingOptions
     {

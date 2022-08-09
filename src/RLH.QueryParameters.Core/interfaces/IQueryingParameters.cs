@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RLH.QueryParameters.Core.Entities
+namespace RLH.QueryParameters.Core
 {
     public interface IQueryingParameters
     {
-        public Dictionary<string,string> ValidationErrors { get;}
+        public Dictionary<string, string> ValidationErrors { get; }
         public IEnumerable<IWhere> WhereConditions { get; }
         public IEnumerable<IOrderBy> OrderByConditions { get; }
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RLH.QueryParameters.Entities
+namespace RLH.QueryParameters
 {
     public class QueryingParameters : QueryingParametersBase
     {

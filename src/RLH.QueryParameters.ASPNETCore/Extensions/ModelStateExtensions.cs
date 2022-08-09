@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using RLH.QueryParameters.Entities;
+using RLH.QueryParameters;
 using RLH.Results;
 
 namespace RLH.QueryParameters.ASPNETCore.Extensions

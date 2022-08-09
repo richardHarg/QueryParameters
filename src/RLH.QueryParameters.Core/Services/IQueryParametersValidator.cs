@@ -1,6 +1,5 @@
-﻿using RLH.QueryParameters.Core.Entities;
-
-namespace RLH.QueryParameters.Core.Services
+﻿
+namespace RLH.QueryParameters.Core
 {
     public interface IQueryParametersValidator : IDisposable
     {

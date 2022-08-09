@@ -1,22 +1,20 @@
-﻿using RLH.QueryParameters.Core.Options;
-using RLH.QueryParameters.Core.Services;
-using RLH.QueryParameters.Services;
+﻿using RLH.QueryParameters.Core;
 
-namespace RLH.QueryParameters.Factories
+namespace RLH.QueryParameters
 {
     public class QueryParametersValidatorFactory
     {
-        public IQueryParametersValidator GetService(IValidationOptions options, int version = 1)
+        public IQueryParametersValidator GetService(ISupportedTypeService supportedTypeService, int version = 1)
         {
             switch (version)
             {
                 default:
-                    return new QueryParametersValidator(options);
+                    return new QueryParametersValidator(supportedTypeService);
             }
         }
         public IQueryParametersValidator GetService(int version = 1)
         {
-            return GetService(new ValidationOptionsFactory().Create(), version);
+            return GetService(new SupportedTypeServiceFactory().GetService(), version);
 
         }
     }

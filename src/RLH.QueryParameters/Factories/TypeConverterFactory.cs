@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RLH.QueryParameters.Factories
+namespace RLH.QueryParameters
 {
     internal class TypeConverterFactory
     {

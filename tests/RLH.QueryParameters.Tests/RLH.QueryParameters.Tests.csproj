@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\RLH.QueryParameters.Core\RLH.QueryParameters.Core.csproj" />
     <ProjectReference Include="..\..\src\RLH.QueryParameters\RLH.QueryParameters.csproj" />
   </ItemGroup>
 

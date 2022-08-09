@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RLH.QueryParameters.Core.Options
+namespace RLH.QueryParameters.Core
 {
     public interface IParsingOptions
     {

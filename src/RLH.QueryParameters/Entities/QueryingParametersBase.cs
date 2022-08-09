@@ -1,19 +1,17 @@
-﻿using RLH.QueryParameters.Core.Entities;
-using RLH.QueryParameters.Core.Options;
-using RLH.QueryParameters.Factories;
-using RLH.QueryParameters.Options;
+﻿
+using RLH.QueryParameters.Core;
 using System.Text.RegularExpressions;
 
 
-namespace RLH.QueryParameters.Entities
+namespace RLH.QueryParameters
 {
     public abstract class QueryingParametersBase : IQueryingParameters
     {
         /// <summary>
         /// Internal Dictionaries holding where and orderby operations
         /// </summary>
-        private Dictionary<string, Where> WhereConditionsDictionary  = new Dictionary<string, Where>();
-        private Dictionary<string, OrderBy> OrderByConditionsDictionary = new Dictionary<string, OrderBy>();
+        private Dictionary<string, IWhere> WhereConditionsDictionary  = new Dictionary<string, IWhere>();
+        private Dictionary<string, IOrderBy> OrderByConditionsDictionary = new Dictionary<string, IOrderBy>();
         private Dictionary<string, string> ValidationErrorsCollection = new Dictionary<string, string>();
 
         protected IParsingOptions ParsingOptions { get; private set; }
@@ -90,7 +88,7 @@ namespace RLH.QueryParameters.Entities
                     builtString += ParsingOptions.SeperationChar;
                 }
 
-                builtString += $"{operation.PropertyName}{ParsingOptions.SpaceChar}{operation.LogicalOperator}{ParsingOptions.SpaceChar}{operation.PropertyValue.Replace(' ',ParsingOptions.SpaceChar)}";
+                builtString += $"{operation.PropertyName}{ParsingOptions.SpaceChar}{operation.LogicalOperator}{ParsingOptions.SpaceChar}{operation.PropertyValue.ToString().Replace(' ',ParsingOptions.SpaceChar)}";
             }
             return builtString;
         }
@@ -298,7 +296,7 @@ namespace RLH.QueryParameters.Entities
         /// <param name="value">Instance to T to add</param>
         /// <param name="key">Key to use</param>
         /// <param name="overwrite">If the existing entry (if any) is removed and replace by the 'value' parameter</param>
-        private void AddToConditionDictionary<T>(Dictionary<string,T> conditionDictionary,T value) where T : Select
+        private void AddToConditionDictionary<T>(Dictionary<string,T> conditionDictionary,T value) where T : ISelect
         {
             if (conditionDictionary is null)
             {

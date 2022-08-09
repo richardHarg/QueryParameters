@@ -1,11 +1,6 @@
-﻿using RLH.QueryParameters.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RLH.QueryParameters.Core;
 
-namespace RLH.QueryParameters.Entities
+namespace RLH.QueryParameters
 {
     /// <summary>
     /// Contains details of a 'Where' condition, used when querying data in a backing store
@@ -30,6 +25,6 @@ namespace RLH.QueryParameters.Entities
         /// <summary>
         /// Property value associated with this condition
         /// </summary>
-        public string PropertyValue { get; private set; }
+        public object PropertyValue { get; private set; }
     }
 }

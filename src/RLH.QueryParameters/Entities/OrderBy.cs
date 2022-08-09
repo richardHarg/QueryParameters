@@ -1,11 +1,11 @@
-﻿using RLH.QueryParameters.Core.Entities;
+﻿using RLH.QueryParameters.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RLH.QueryParameters.Entities
+namespace RLH.QueryParameters
 {
     /// <summary>
     /// Contains details of a 'OrderBy' condition, used when querying data in a backing store

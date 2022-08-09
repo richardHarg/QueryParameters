@@ -1,43 +1,59 @@
-﻿using System;
+﻿
 using System.Reflection;
-using RLH.QueryParameters.Core.Attributes;
-using RLH.QueryParameters.Core.Entities;
-using RLH.QueryParameters.Core.Options;
-using RLH.QueryParameters.Core.Services;
-using RLH.QueryParameters.Entities;
+using RLH.QueryParameters.Core;
 
-using RLH.QueryParameters.Options;
-
-namespace RLH.QueryParameters.Services
+namespace RLH.QueryParameters
 {
     public class QueryParametersValidator : IQueryParametersValidator
     {
         private bool disposedValue;
+        private ISupportedTypeService _supportedTypeService;
 
-        private IValidationOptions _options;
-
-        public QueryParametersValidator(IValidationOptions options)
+        public QueryParametersValidator(ISupportedTypeService supportedTypeService)
         {
-            _options = options;
+            _supportedTypeService = supportedTypeService;
         }
-
 
         public Dictionary<string, string> Validate<T>(IQueryingParameters queryParameters)
         {
-            // Get (from cache) OR if exists in cache get the queryable properties for this data type T
-            var classQueryableProperties = GetCurrentClassQueryableProperties<T>();
+            ValidateWhereConditions(queryParameters, typeof(T));
 
-            ValidateWhereConditions(queryParameters, classQueryableProperties);
-
-            ValidateOrderByConditions(queryParameters, classQueryableProperties);
+            ValidateOrderByConditions(queryParameters, typeof(T));
 
             return queryParameters.ValidationErrors;
         }
 
-        private void ValidateWhereConditions(IQueryingParameters queryParameters, Dictionary<string, Type> parameters)
+        private void ValidateWhereConditions(IQueryingParameters queryParameters, Type initialType)
         {
             foreach (Where operation in queryParameters.WhereConditions.Where(x => x.External))
             {
+                // Using the provided ProprtyName and a starting class type attempt to locate a supported type
+                var supportedTypeInfo = _supportedTypeService.FindSupportedTypeForProperty(initialType, operation.PropertyName);
+
+                // If null report and break now with no further validation.
+                if (supportedTypeInfo == null)
+                {
+                    queryParameters.AddValidationError(operation.PropertyName, $"PropertyName '{operation.PropertyName}' is not a valid queryable property.'");
+                    break;
+                }
+
+                // Check the logical operator value against the support types valid operators
+                if (supportedTypeInfo.Operators.Contains(operation.LogicalOperator) == false)
+                {
+                    queryParameters.AddValidationError(operation.PropertyName, $"LogicalOperator '{operation.LogicalOperator}' is not supported on Type '{supportedTypeInfo.Type.Name}'. Valid operators are: {string.Join(',', supportedTypeInfo.Operators)}");
+                }
+
+                try
+                {
+                    supportedTypeInfo.TypeConverter.ConvertFrom(operation.PropertyValue);
+                }
+                catch
+                {
+                    queryParameters.AddValidationError(operation.PropertyName, $"Error parsing PropertyValue '{operation.PropertyValue}' to type '{supportedTypeInfo.Type.Name}'");
+                }
+
+
+                /*
                 // Supported Type is used for later validation of logical operators/type conversion and by proxy also 
                 // confirms if the PropertyName provided is valid AND the data type of this property is supported
                 var supportedTypeInfo = FindSupportedTypeForQueryableProperty(parameters,operation.PropertyName);
@@ -72,28 +88,28 @@ namespace RLH.QueryParameters.Services
                 {
                     queryParameters.AddValidationError(operation.PropertyName, $"PropertyName '{operation.PropertyName}' is not a valid queryable property.'");
                 }
+
+                */
             }
         }
-        private void ValidateOrderByConditions(IQueryingParameters queryParameters, Dictionary<string, Type> parameters)
+        private void ValidateOrderByConditions(IQueryingParameters queryParameters,Type initialType)
         {
             foreach (OrderBy operation in queryParameters.OrderByConditions.Where(x => x.External))
             {
                 // Supported Type is used for later validation of logical operators/type conversion and by proxy also 
                 // confirms if the PropertyName provided is valid AND the data type of this property is supported
-                var supportedTypeInfo = FindSupportedTypeForQueryableProperty(parameters,operation.PropertyName);
+                var supportedTypeInfo = _supportedTypeService.FindSupportedTypeForProperty(initialType, operation.PropertyName);
 
-                // If a value was returned then continue validation
-                if (supportedTypeInfo != null)
-                {
-                    // Check the sortOrder is of the correct two possible values
-                    if (operation.SortOrder != "ascending" && operation.SortOrder != "descending")
-                    {
-                        queryParameters.AddValidationError(operation.PropertyName, $"Invalid SortOrder value '{operation.SortOrder}'. Must be asc/desc or omitted (default ascending)");
-                    }
-                }
-                else
+                if (supportedTypeInfo == null)
                 {
                     queryParameters.AddValidationError(operation.PropertyName, $"PropertyName '{operation.PropertyName}' is not a valid queryable property.'");
+                    break;
+                }
+
+                // Check the sortOrder is of the correct two possible values
+                if (operation.SortOrder != "ascending" && operation.SortOrder != "descending")
+                {
+                    queryParameters.AddValidationError(operation.PropertyName, $"Invalid SortOrder value '{operation.SortOrder}'. Must be asc/desc or omitted (default ascending)");
                 }
             }
         }
@@ -133,40 +149,7 @@ namespace RLH.QueryParameters.Services
             GC.SuppressFinalize(this);
         }
 
-        private Dictionary<string, Type> GetCurrentClassQueryableProperties<T>()
-        {
-            Dictionary<string, Type> types = new Dictionary<string, Type>();
-            foreach (PropertyInfo property in typeof(T).GetProperties())
-            {
-                if (property.CustomAttributes.Any(x => x.AttributeType == typeof(QueryableAttribute)))
-                {
-                    types.Add(property.Name.ToLower(), property.PropertyType);
-                }
-            }
-            return types;
-        }
-
-        /// <summary>
-        ///  Checks the provided dictionary of queryable class properties for the given 
-        ///  PropertyName key and, if found returns the type of this property.
-        ///  
-        ///  If above key located checks the Options 'SupportedTypes' dictionary for the property type obtained above
-        ///  and, if found returns the 'SupportedType' instance associated with this data type.
-        /// </summary>
-        /// <param name="propertyName">Name of Property to search for</param>
-        /// <param name="queryableProperties">Dictionary with PropertyNames/Types of valid queryable properties</param>
-        /// <returns></returns>
-        private ISupportedType FindSupportedTypeForQueryableProperty(Dictionary<string, Type> properteies, string propertyName)
-        {
-            // Check if the class specific list of properties contains a key which matches the provided PropertyName
-            if (properteies.TryGetValue(propertyName.ToLower(), out Type type) == true)
-            {
-                if (_options.SupportedTypes.TryGetValue(type, out ISupportedType value) == true)
-                {
-                    return value;
-                }
-            }
-            return null;
-        }
+        
+        
     }
 }
